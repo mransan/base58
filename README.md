@@ -8,6 +8,10 @@ This library provide encoding and decoding function for the Base 58 encoding.
 opam install base58 
 ```
 
+### Documentation 
+
+OCamldoc generated doc can be found [here](http://mransan.github.io/base58/).
+
 ### Example
 
 ```OCaml
