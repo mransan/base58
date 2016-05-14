@@ -1,0 +1,6 @@
+version = "0.1.0"
+description = "Base58 encoding library" 
+requires = "bytes"
+archive(byte) = "b58.cma"
+archive(native) = "b58.cmxa"
+exists_if = "b58.cma"

@@ -42,10 +42,38 @@ let () =
   ] in
 
   List.iter (fun (bin, exp)  -> 
-    let bin    = Bytes.of_string bin in 
     List.iter (fun (name, alphabet) -> 
-      let got = Bytes.to_string @@ B58.encode alphabet bin in 
-      assert_string_eq got exp
+      let got = 
+        let bin    = Bytes.of_string bin in 
+        Bytes.to_string @@ B58.encode alphabet bin 
+      in
+      assert_string_eq got exp; 
+      let got = 
+        let bin = Bytes.of_string exp in 
+        Bytes.to_string @@ B58.decode alphabet bin
+      in
+      assert_string_eq got bin
     ) all_encodings; 
   ) test_cases; 
+
+  begin match B58.make_alphabet "123" with
+  | x -> assert(false) (* exception expected *) 
+  | exception B58.Invalid_alphabet -> ()
+  end;
+  
+  let invalid_b58 = Bytes.of_string "\001\002" in  
+  begin match B58.decode B58.bitcoin invalid_b58 with
+  | x -> assert(false) (* exception expected *)
+  | exception B58.Invalid_base58_character -> () 
+  end;
+  
+  for i = 0 to 100 do 
+    let s = Bytes.init (Random.int 1000) (fun _  -> 
+      Char.chr @@ Random.int 255
+    ) in 
+    let b58 = B58.encode B58.bitcoin s in 
+    let s'  = B58.decode B58.bitcoin b58 in 
+    assert(s = s')
+  done; 
+  
   ()

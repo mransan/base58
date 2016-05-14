@@ -41,3 +41,9 @@ val bitcoin : alphabet
 val encode : alphabet -> bytes -> bytes 
 (** [encode alphabet data] encodes [data] using [alphabet]. 
   *)
+
+exception Invalid_base58_character 
+
+val decode : alphabet -> bytes -> bytes 
+(** [decode alphabet data] decodes [data] using [alphabet]. 
+  *)
