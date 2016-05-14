@@ -2,7 +2,9 @@ OCB_INC   = -I src -I tests
 OCB_FLAGS = 
 OCB       = ocamlbuild $(OCB_FLAGS) $(OCB_INC)
 
-.PHONY: test lib.native lib.byte lib.install lib.uninstall clean 
+.PHONY: all doc test lib.native lib.byte lib.install lib.uninstall clean 
+
+all: test lib.native lib.byte doc
 
 lib.native:
 	$(OCB) base58.cmxa
@@ -35,6 +37,10 @@ lib.install:
 lib.uninstall:
 	ocamlfind remove base58
 
+doc:
+	$(OCB) src/base58.docdir/index.html
+
 test: 
 	$(OCB) test.native
-	export OCAMLRUNPARAM="b" && ./test.native 
+	export OCAMLRUNPARAM="b" && time ./test.native 
+

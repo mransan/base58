@@ -22,6 +22,20 @@
   SOFTWARE.
 *)
 
+module Util = struct 
+
+  let implace_map f bytes = 
+    let rec aux = function
+      | -1 -> () 
+      | i  -> begin 
+        Bytes.unsafe_set bytes i (f (Bytes.unsafe_get bytes i)); 
+        aux (i - 1)
+      end 
+    in 
+    aux (Bytes.length bytes - 1)
+
+end (* Util *) 
+
 module Alphabet = struct 
 
   exception Invalid 
@@ -45,8 +59,8 @@ module Alphabet = struct
     | -1 -> raise Invalid_base58_character 
     | i  -> i
 
-  let chr  i (s, _) = 
-    String.get s i 
+  let chr i (s, _) = 
+    String.unsafe_get s i 
 
 end (* Alphabet *) 
 
@@ -78,13 +92,13 @@ let convert inp from_base to_base =
 
   for inp_i=inp_beg to inp_len - 1 do
 
-    carry := Char.code (Bytes.get inp inp_i);
+    carry := Char.code (Bytes.unsafe_get inp inp_i);
 
     let rec iter = function
       | buf_i when buf_i > !buf_end || !carry <> 0 -> (
 
-        carry := !carry + (from_base * (Bytes.get buf buf_i |> Char.code));
-        Bytes.set buf buf_i (Char.unsafe_chr (!carry mod to_base)); 
+        carry := !carry + (from_base * (Bytes.unsafe_get buf buf_i |> Char.code));
+        Bytes.unsafe_set buf buf_i (Char.unsafe_chr (!carry mod to_base)); 
         carry := !carry / to_base;
         iter (buf_i - 1)
       ) 
@@ -107,7 +121,7 @@ let encode alphabet bin  =
   let b58 = convert bin 256 58 in  
   Bytes.map (fun c ->
     Alphabet.chr (Char.code c) alphabet
-  ) b58 
+  ) b58
 
 let decode alphabet bin = 
   let bin = Bytes.map (fun c -> 
@@ -125,5 +139,3 @@ exception Invalid_alphabet = Alphabet.Invalid
 exception Invalid_base58_character = Alphabet.Invalid_base58_character
 
 let make_alphabet = Alphabet.make 
-
-let bitcoin = Alphabet.make "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"

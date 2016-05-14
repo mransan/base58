@@ -23,20 +23,41 @@
 
 *)
 
+(** Base58 encoding functionality 
+
+    This module implement both encoding and decoding functionality
+    for the Base58 encoding.
+    More information can be found {{:https://en.wikipedia.org/wiki/Base58}here}. 
+    This encoding is well suited to encode large integer values 
+    but not large binary data. 
+    Both encode and decode have a quadratic performance with 
+    respect to the length of the binary data. 
+  *)
+
+(** {2 Types} *)
+
 type alphabet 
+(** An alphabet defines the character associated with a given value
+    
+    For instance the binary alphabet would ["01"] while the hexadecimal
+    one would be ["0123456789ABCDEF"]. 
+    
+    Since this module only focuses with Base 58 encoding the alphabet must 
+    be created with 58 unique characters. 
+  *) 
 
 exception Invalid_alphabet
 
+(** {2 Alphabet} *)
+
 val make_alphabet : string -> alphabet 
 (** [make_alphabet s] creates a base 58 alphabet.
-  * 
-  * If [s] length is different than 58 characters then [Invalid_alphabet] 
-  * exception is raised.
+    
+    If [s] length is different than 58 characters then [Invalid_alphabet] 
+    exception is raised.
   *) 
 
-val bitcoin : alphabet 
-(** Bitcoin alphabet according to https://en.bitcoin.it/wiki/Base58Check_encoding 
-  *)
+(** {2 Decoding/Encoding} *)
 
 val encode : alphabet -> bytes -> bytes 
 (** [encode alphabet data] encodes [data] using [alphabet]. 
@@ -46,4 +67,7 @@ exception Invalid_base58_character
 
 val decode : alphabet -> bytes -> bytes 
 (** [decode alphabet data] decodes [data] using [alphabet]. 
+    
+    If [data] contains character not included in [alphabet], 
+    [Invalid_base58_character] exception is raised.
   *)
