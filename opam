@@ -5,9 +5,9 @@ maintainer: "Maxime Ransan <maxime.ransan@gmail.com>"
 authors:[
   "Maxime Ransan <maxime.ransan@gmail.com>"
 ]
-homepage: "https://github.com/mransan/raft"
-bug-reports:"https://github.com/mransan/raft/issues"
-dev-repo:"https://github.com/mransan/raft.git"
+homepage: "https://github.com/mransan/base58"
+bug-reports:"https://github.com/mransan/base58/issues"
+dev-repo:"https://github.com/mransan/base58.git"
 license: "MIT"
 build: [
   [make "lib.byte"]   
@@ -20,4 +20,8 @@ remove:  [make "lib.uninstall"]
 depends: [
   "ocamlfind"  {build}
   "ocamlbuild" {build}
+]
+tags:[
+  "base58"
+  "encoding"
 ]
