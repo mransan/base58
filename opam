@@ -25,3 +25,4 @@ tags:[
   "base58"
   "encoding"
 ]
+available: [ ocaml-version >= "4.02.1" & opam-version >= "1.2" ]
